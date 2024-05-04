@@ -4,10 +4,9 @@ Class for data description
 
 import numpy as np
 import pandas as pd
-from abc import ABC
 
 
-class HogwartsDataDescriber(pd.DataFrame, ABC):
+class HogwartsDataDescriber(pd.DataFrame):
 
     houses = ['Gryffindor', 'Slytherin', 'Ravenclaw', 'Hufflepuff']
     colors = ['red', 'green', 'blue', 'yellow']

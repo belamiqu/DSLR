@@ -88,11 +88,11 @@ if __name__ == "__main__":
     parser = ArgumentParser()
 
     parser.add_argument('--data_path', type=str,
-                        default="../data/dataset_train.csv",
+                        default="dataset_train.csv",
                         help='Path to "dataset_*.csv" file')
 
     parser.add_argument('--config_path', type=str,
-                        default="../config.yaml",
+                        default="config.yaml",
                         help='path to .yaml file')
 
     args = parser.parse_args()

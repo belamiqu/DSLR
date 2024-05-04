@@ -10,8 +10,8 @@ from time import time
 from argparse import ArgumentParser
 
 from config import Config
-from dslr.preprocessing import scale, fill_na
-from dslr.multi_classifier import OneVsAllLogisticRegression
+from preprocessing import scale, fill_na
+from multi_classifier import OneVsAllLogisticRegression
 
 
 def predict(data_path: str,

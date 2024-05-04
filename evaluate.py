@@ -52,19 +52,19 @@ if __name__ == '__main__':
     parser = ArgumentParser()
 
     parser.add_argument('--train_path', type=str,
-                        default="data/dataset_train.csv",
+                        default="dataset_train.csv",
                         help='Path to "dataset_train.csv" file')
 
     parser.add_argument('--test_path', type=str,
-                        default="data/dataset_test.csv",
+                        default="dataset_test.csv",
                         help='Path to "dataset_test.csv" file')
 
     parser.add_argument('--truth_path', type=str,
-                        default="data/dataset_truth.csv",
+                        default="dataset_truth.csv",
                         help='Path to "dataset_truth.csv" file')
 
     parser.add_argument('--weights_path', type=str,
-                        default="data/weights.pt",
+                        default="weights.pt",
                         help='Path to save weights file')
 
     parser.add_argument('--output_folder', type=str,

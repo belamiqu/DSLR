@@ -5,8 +5,8 @@ One-vs-all logistic regression implementation using PyTorch tensors
 import torch
 import numpy as np
 
-from dslr.classifier import LogisticRegression
-from dslr.pytorch_utils import get_device, to_tensor
+from classifier import LogisticRegression
+from pytorch_utils import get_device, to_tensor
 
 
 class OneVsAllLogisticRegression(object):

@@ -11,8 +11,8 @@ from argparse import ArgumentParser
 from config import Config
 from evaluate import accuracy_score
 from logreg_train import plot_training
-from dslr.preprocessing import scale, fill_na
-from dslr.multi_classifier import OneVsAllLogisticRegression
+from preprocessing import scale, fill_na
+from multi_classifier import OneVsAllLogisticRegression
 
 
 def train_test_split(x: np.ndarray,

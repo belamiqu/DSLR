@@ -10,8 +10,8 @@ from argparse import ArgumentParser
 from matplotlib import pyplot as plt
 
 from config import Config
-from dslr.preprocessing import scale, fill_na
-from dslr.multi_classifier import OneVsAllLogisticRegression
+from preprocessing import scale, fill_na
+from multi_classifier import OneVsAllLogisticRegression
 
 
 def plot_training(model: OneVsAllLogisticRegression):
