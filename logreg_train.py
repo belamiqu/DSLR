@@ -1,101 +1,34 @@
 """
 Script to train one-vs-all logistic regression
-It saves models weights in weights.pt
+It saves models weights in separate files
 """
-
 import numpy as np
 import pandas as pd
-from time import time
-from argparse import ArgumentParser
-from matplotlib import pyplot as plt
-
-from config import Config
-from preprocessing import scale, fill_na
-from multi_classifier import OneVsAllLogisticRegression
-
-
-def plot_training(model: OneVsAllLogisticRegression):
-    """
-    Plot loss history
-    :param model: trained model
-    :return: None
-    """
-    _, ax = plt.subplots()
-
-    epochs = range(1, model.epochs + 1)
-
-    for sub_model, label in zip(model.models, model.labels):
-        ax.plot(epochs, sub_model.hist, label=label)
-
-    ax.set_xlabel('Epochs')
-    ax.set_ylabel('Loss')
-    ax.set_title('Logistic Regression, batch size: {}'
-                 .format(model.batch_size))
-    ax.legend(loc="upper right")
-    plt.show()
-
-
-def train(data_path: str,
-          weights_path: str,
-          config_path: str,
-          v: bool = False):
-
-    # CHOOSE FROM CONFIG FEATURES TO TRAIN ON
-    config = Config(config_path)
-    courses = config.choosed_features()
-
-    # READ TRAIN DATASET AND FILL NAN VALUES
-    preparation_t = time()
-    df = pd.read_csv(data_path)
-    df = fill_na(df, courses)
-
-    # CHOOSE FEATURE AND LABEL VALUES
-    x = df[courses].values
-    y = df["Hogwarts House"].values
-
-    # CREATE MODEL TO TRAIN
-    model = OneVsAllLogisticRegression(
-        device=config.device,
-        transform=scale[config.scale],
-        lr=config.lr,
-        epochs=config.epochs,
-        batch_size=config.batch_size,
-        seed=config.seed,
-        save_hist=v
-    )
-    preparation_t = time() - preparation_t
-
-    # TRAIN MODEL
-    train_t = time()
-    model.fit(x, y)
-    train_t = time() - train_t
-
-    # SAVE WEIGHTS AND SCALE PARAMS
-    model.save(weights_path)
-
-    print("Preparation time:", np.round(preparation_t, 4))
-    print("Training time:", np.round(train_t, 4))
-    print("All time:", np.round(preparation_t + train_t, 4))
-
-    if v:
-        plot_training(model)
-
+import argparse
+from model import LogisticRegressionOVR
+from data_describer import read_file
 
 if __name__ == "__main__":
-    parser = ArgumentParser()
-
-    parser.add_argument('data_path', type=str,
-                        help='Path to "dataset_train.csv" file')
-
-    parser.add_argument('--weights_path', type=str, default="data/weights.pt",
-                        help='Path to save weights file')
-
-    parser.add_argument('--config_path', type=str, default="config.yaml",
-                        help='path to .yaml file')
-
-    parser.add_argument('-v', action="store_true",
-                        help='visualize training')
-
+    parser = argparse.ArgumentParser()
+    parser.add_argument('file', help="datasets to train")
+    parser.add_argument('-v', action='store_true', help="visualize cost/iteration", default=False)
+    parser.add_argument('-n', action='store', help="number of iteration", type=int, default=30000)
     args = parser.parse_args()
 
-    train(args.data_path, args.weights_path, args.config_path, args.v)
+    hptrain = read_file(args.file)
+    logreg = LogisticRegressionOVR(data=hptrain, v=args.v, n_iter=args.n, prediction=False)
+    weights = logreg.fit()
+
+    """Convert list of tuples to a dictionary"""
+    weights_dict = {house: w for (w, house) in weights}
+
+    """Save the weights in an npy file"""
+    np.save("weights.npy", weights_dict)
+
+    print(f"Weights saved in 'weights.npy',\nAccuracy: {'{:.2f}'.format(logreg.score() * 100)} %")
+
+    """Convert the weights to a Pandas DataFrame"""
+    weights_df = pd.DataFrame(weights, columns=['Feature', 'Weight'])
+
+    """Save the DataFrame to a CSV file"""
+    weights_df.to_csv("weights.csv", index=False)

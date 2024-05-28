@@ -1,65 +1,62 @@
-"""
-Scatter plot of 2 courses
-"""
 
+from data_describer import load_csv
+import numpy as np
 import matplotlib.pyplot as plt
-from argparse import ArgumentParser
-
-from data_describer import HogwartsDataDescriber
 
 
-def scatter_plot(plot: plt,
-                 df: HogwartsDataDescriber,
-                 course1: str,
-                 course2: str):
-    """
-    Scatter plot for 2 courses
-    :param plot: matplotlib.axes._subplots.AxesSubplot
-    :param df: HogwartsDataDescriber
-    :param course1: course 1 name
-    :param course2: course 2 name
-    :return: None
-    """
+def scatter_plot(X, y, legend, xlabel, ylabel):
+    plt.scatter(X[:327], y[:327], color='red', alpha=0.5)  # Grynffindor House
+    plt.scatter(X[327:856], y[327:856], color='yellow', alpha=0.5)  # Hufflepuff House
+    plt.scatter(X[856:1299], y[856:1299], color='blue', alpha=0.5)  # Ravenclaw House
+    plt.scatter(X[1299:], y[1299:], color='green', alpha=0.5)  # Slytherin House
 
-    for house, color in zip(df.houses, df.colors):
-        # choose course marks of students belonging to the house
-        x = df[course1][df['Hogwarts House'] == house]
-        y = df[course2][df['Hogwarts House'] == house]
+    plt.legend(legend, loc='upper right', frameon=False)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
 
-        plot.scatter(x, y, color=color, alpha=0.5)
-
-
-def show_scatter_plot(csv_path: str, course1: str, course2: str):
-    # obtaining data for plotting
-    df = HogwartsDataDescriber.read_csv(csv_path)
-    _, ax = plt.subplots()
-
-    scatter_plot(ax, df, course1, course2)
-    ax.set_xlabel(course1)
-    ax.set_ylabel(course2)
-    ax.legend(df.houses)
     plt.show()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
+    
+    """
+    After looking at the PairPlot graph you will notice that 
+        "Astronomy" and "Defense Against the Dark Arts"
+    are the only two smilar features
+    """
 
-    parser = ArgumentParser()
+    dataset = load_csv('dataset_train.csv')
+    data = dataset[1:, :]
+    data = data[data[:, 1].argsort()]
+    
+    """"Linear Negative Correlation:when Defense Again.. increases, Astromomy tends to decrease."""
 
-    parser.add_argument('--data_path',
-                        type=str,
-                        default='dataset_train.csv',
-                        help='Path to dataset_train.csv file')
+    # X = np.array(data[:, 7], dtype=float)  # get the "Astronomy" row data
+    # y = np.array(data[:, 9], dtype=float)  # get the "Defense Again ..." row data
+    # legend = ['Grynffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin']  # set the "Hogwarts House"'s \
+    # # names manually
+    # scatter_plot(X, y, legend=legend, xlabel=dataset[0, 7], ylabel=dataset[0, 9])
 
-    parser.add_argument('--course1',
-                        type=str,
-                        default='Astronomy',
-                        help='Name of the course for x axis')
+    """Being bad at magic and good at Flying means 99% that you belong in Grinffindor"""
+    
+    X = np.array(data[:, 13], dtype=float)  # get the History of Magics row data
+    y = np.array(data[:, 18], dtype=float)  # get the "Flying ..." row data
+    legend = ['Grynffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin']  # set the "Hogwarts House"'s \
+    # names manually
+    scatter_plot(X, y, legend=legend, xlabel=dataset[0, 13], ylabel=dataset[0, 18])
 
-    parser.add_argument('--course2',
-                        type=str,
-                        default='Defense Against the Dark Arts',
-                        help='Name of the course for y axis')
+    """" If they get bad marks in those they belong to 99% to Grynffindor"""
 
-    args = parser.parse_args()
+    # X = np.array(data[:, 13], dtype=float)  # get the "History of Magics" row data
+    # y = np.array(data[:, 14], dtype=float)  # get the "Transfiguration ..." row data
+    # legend = ['Grynffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin']  # set the "Hogwarts House"'s \
+    # # names manually
+    # scatter_plot(X, y, legend=legend, xlabel=dataset[0, 13], ylabel=dataset[0, 14])
 
-    show_scatter_plot(args.data_path, args.course1, args.course2)
+    """Null or weak correlation"""
+    X = np.array(data[:, 6], dtype=float)  # get the "Arithmancy" row data
+    y = np.array(data[:, 16], dtype=float)  # get the "Care of Magical Creatures ..." row data
+    legend = ['Grynffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin']  # set the "Hogwarts House"'s \
+    # names manually
+    scatter_plot(X, y, legend=legend, xlabel=dataset[0, 6], ylabel=dataset[0, 16])
+    

@@ -1,65 +1,51 @@
-
+import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
-from argparse import ArgumentParser
+from data_describer import read_file
+import argparse
 
-from data_describer import HogwartsDataDescriber
+def split_data_by_house(data, feature):
+    houses = ['Gryffindor', 'Slytherin', 'Hufflepuff', 'Ravenclaw']
+    house_data = {house: data[data['Hogwarts House'] == house][feature].dropna() for house in houses}
+    return house_data
 
+def plot_histogram(ax, house_data, feature):
+    colors = {'Gryffindor': 'red', 'Slytherin': 'green', 'Hufflepuff': 'yellow', 'Ravenclaw': 'blue'}
+    for house, data in house_data.items():
+        ax.hist(data, bins='auto', facecolor=colors[house], alpha=0.5, label=house)
+    ax.set_title(feature)
+    ax.legend(frameon=False)
 
-def histogram(plot: plt,
-              df: HogwartsDataDescriber,
-              course: str,
-              save_path: str):
-    """
-    Scatter plot for 2 courses
-    :param plot: matplotlib.axes._subplots.AxesSubplot
-    :param df: HogwartsDataDescriber
-    :param course: course name
-    :param save_path: path to save the plot
-    :return: None
-    """
-    for house, color in zip(df.houses, df.colors):
-        # choose course marks of students belonging to the house
-        marks = df[course][df['Hogwarts House'] == house].dropna()
+def show_histogramme(data):
+    features = [col for col in data.columns if col != 'Hogwarts House']
+    fig, axs = plt.subplots(2, 7, figsize=(16, 10))
+    axs = axs.flatten()
 
-        plot.hist(marks, color=color, alpha=0.5)
+    for ax, feature in zip(axs, features):
+        house_data = split_data_by_house(data, feature)
+        plot_histogram(ax, house_data, feature)
 
-    plot.set_title(course)
-    plot.legend(df.houses, frameon=False)
-    plot.set_xlabel('Marks')
-    plot.set_ylabel('Students')
-
-    # Save the plot as a PNG file
-    plot.figure.savefig(save_path)
-
-
-def show_course_marks_distribution(csv_path: str, course: str, save_path: str):
-    # obtaining data for plotting
-    df = HogwartsDataDescriber.read_csv(csv_path)
-    _, ax = plt.subplots()
-
-    histogram(ax, df, course, save_path)
+    plt.tight_layout()
     plt.show()
 
+def show_most_homogenous_feat(data):
+    fig, ax = plt.subplots(figsize=(10, 6))
+    house_data = split_data_by_house(data, 'Care of Magical Creatures')
+    plot_histogram(ax, house_data, 'Care of Magical Creatures')
+    ax.set_title("Most homogenous feature: Care of Magical Creatures")
+    plt.tight_layout()
+    plt.show()
 
-if __name__ == "__main__":
-
-    parser = ArgumentParser()
-
-    parser.add_argument('--data_path',
-                        type=str,
-                        default='../data/dataset_train.csv',
-                        help='Path to dataset_train.csv file')
-
-    parser.add_argument('--course',
-                        type=str,
-                        default='Care of Magical Creatures',
-                        help='Name of the course to plot')
-
-    parser.add_argument('--save_path',
-                        type=str,
-                        default='plot.png',
-                        help='Path to save the plot')
-
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('file', help="Dataset to analyze")
+    parser.add_argument('-all', action='store_true', help="Plot all histograms", default=False)
     args = parser.parse_args()
 
-    show_course_marks_distribution(args.data_path, args.course, args.save_path)
+    data = read_file(args.file)
+    if args.all:
+        show_histogramme(data)
+    show_most_homogenous_feat(data)
+
+if __name__ == "__main__":
+    main()
