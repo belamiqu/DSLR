@@ -3,24 +3,6 @@ import numpy as np
 import pandas as pd
 import sys
 
-# def load_csv(filename):
-#     dataset = list()
-#     with open(filename) as csvfile:
-#         reader = csv.reader(csvfile)
-#         try:
-#             for _ in reader:
-#                 row = list()
-#                 for value in _:
-#                     try:
-#                         value = float(value)
-#                     except:
-#                         if not value:
-#                             value = np.nan
-#                     row.append(value)
-#                 dataset.append(row)
-#         except csv.Error as e:
-#             print(f'file {filename}, line {reader.line_num}: {e}')
-#     return np.array(dataset, dtype=object)
 
 def load_csv(filename):
     dataset = []
@@ -109,39 +91,4 @@ def percentile_(X, p):
     d0 = X[int(f)] * (c - k)
     d1 = X[int(c)] * (k - f)
     return d0 + d1
-
-def describe_data(data):
-    description = {
-        'Count': [],
-        'Mean': [],
-        'Std': [],
-        'Min': [],
-        '25%': [],
-        '50%': [],
-        '75%': [],
-        'Max': []
-    }
-    
-    for column in data.columns:
-        if data[column].dtype in [np.float64, np.int64]:
-            description['Count'].append(count_(data[column]))
-            description['Mean'].append(mean_(data[column]))
-            description['Std'].append(std_(data[column]))
-            description['Min'].append(min_(data[column]))
-            description['25%'].append(percentile_(data[column], 25))
-            description['50%'].append(percentile_(data[column], 50))
-            description['75%'].append(percentile_(data[column], 75))
-            description['Max'].append(max_(data[column]))
-        else:
-            description['Count'].append(np.nan)
-            description['Mean'].append(np.nan)
-            description['Std'].append(np.nan)
-            description['Min'].append(np.nan)
-            description['25%'].append(np.nan)
-            description['50%'].append(np.nan)
-            description['75%'].append(np.nan)
-            description['Max'].append(np.nan)
-    
-    desc_df = pd.DataFrame(description, index=data.columns)
-    return desc_df
 

@@ -25,7 +25,7 @@ class LogisticRegressionOVR:
 
     def _processing(self, hptrain, pred=True):
 
-        hptrain = hptrain.drop(['Astronomy', 'Care of Magical Creatures', 'Charms'], axis=1)
+        hptrain = hptrain.drop(['Astronomy', 'Care of Magical Creatures', 'Transfiguration'], axis=1)
         if pred == False:
 
             hp_features = np.array((hptrain.iloc[:, 1:]))
@@ -115,6 +115,8 @@ class LogisticRegressionOVR:
             weights = self.w
         X, y = self.X, self.y
         return [self._predict_one(i, weights) for i in X]
+    
     """This method calculates the accuracy of the model """
+    
     def score(self):
         return sum(self.predict() == self.y) / len(self.y)
