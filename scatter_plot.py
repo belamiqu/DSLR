@@ -13,8 +13,8 @@ def scatter_plot(X, y, legend, xlabel, ylabel):
     plt.legend(legend, loc='upper right', frameon=False)
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
-
     plt.show()
+
 
 
 if __name__ == '__main__':
@@ -32,18 +32,19 @@ if __name__ == '__main__':
     """"Linear Negative Correlation:when Defense Again.. increases, Astromomy tends to decrease."""
 
     
-# X = np.array(data[:, 7], dtype=float)  # get the "Astronomy" row data
-#     y = np.array(data[:, 9], dtype=float)  # get the "Defense Again ..." row data
-#     legend = ['Grynffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin']  # set the "Hogwarts House"'s \
-#     # names manually
-#     scatter_plot(X, y, legend=legend, xlabel=dataset[0, 7], ylabel=dataset[0, 9])
-    """Being bad at magic and good at Flying means 99% that you belong in Grinffindor"""
-
-    # X = np.array(data[:, 13], dtype=float)  # get the History of Magics row data
-    # y = np.array(data[:, 18], dtype=float)  # get the "Flying ..." row data
+    # X = np.array(data[:, 7], dtype=float)  # get the "Astronomy" row data
+    # y = np.array(data[:, 9], dtype=float)  # get the "Defense Again ..." row data
     # legend = ['Grynffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin']  # set the "Hogwarts House"'s \
     # # names manually
-    # scatter_plot(X, y, legend=legend, xlabel=dataset[0, 13], ylabel=dataset[0, 18])
+    # scatter_plot(X, y, legend=legend, xlabel=dataset[0, 7], ylabel=dataset[0, 9])
+
+    """Being bad at magic and good at Flying means 99% that you belong in Grinffindor"""
+
+    X = np.array(data[:, 13], dtype=float)  # get the History of Magics row data
+    y = np.array(data[:, 18], dtype=float)  # get the "Flying ..." row data
+    legend = ['Grynffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin']  # set the "Hogwarts House"'s \
+    # names manually
+    scatter_plot(X, y, legend=legend, xlabel=dataset[0, 13], ylabel=dataset[0, 18])
 
     """" If they get bad marks in those they belong to 99% to Grynffindor"""
 
@@ -53,7 +54,7 @@ if __name__ == '__main__':
     # # names manually
     # scatter_plot(X, y, legend=legend, xlabel=dataset[0, 13], ylabel=dataset[0, 14])
 
-    # """Null or weak correlation"""
+    """Null or weak correlation"""
     # X = np.array(data[:, 6], dtype=float)  # get the "Arithmancy" row data
     # y = np.array(data[:, 16], dtype=float)  # get the "Care of Magical Creatures ..." row data
     # legend = ['Grynffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin']  # set the "Hogwarts House"'s \
